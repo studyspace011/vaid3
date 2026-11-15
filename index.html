@@ -119,7 +119,7 @@ async function send(skip){const nm=$("nm").value.trim(),kw=$("kw").value.trim();
  $("sub").disabled=true;$("sub").textContent="Sending...";
  try{const r=await(await fetch(CFG.api,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({name:nm,email:em,idToken:S.tok||"",keyword:kw,paperId:S.p.id,hp:$("hp").value})})).json();
   if(r.ok){try{localStorage.setItem("vr",JSON.stringify([...vr,Date.now()]))}catch(e){}return done(r)}
-  $("sub").disabled=false;$("sub").textContent="Send request";modal(...(E[r.err]||E.server))}
+  $("sub").disabled=false;$("sub").textContent="Send request";{const m=E[r.err]||E.server;modal(m[0],m[1]+(r.why?"<br><small>Details: "+esc(r.why)+"</small>":""))}}
  catch(e){$("sub").disabled=false;$("sub").textContent="Send request";modal("Network error","Please check your internet and try again.")}}
 
 function done(r){S.step="done";H=[];$("bk").hidden=true;$("pb").style.width="100%";$("q").textContent="Request received!";
