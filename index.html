@@ -104,7 +104,7 @@ function form(){const a=AV[S.p.id];$("q").textContent=S.p.name;
 <label>Your name<input id="nm" autocomplete="name" maxlength="60"></label>
 <label>Keyword from the end of the notes<input id="kw" autocomplete="off"></label>
 <label>Email<input id="em" type="email" autocomplete="email" placeholder="name@gmail.com"></label><div id="gb" style="margin:0 0 12px"></div>
-<input id="hp" class="hp" tabindex="-1" autocomplete="off"><button class="btn" id="sub">Send request</button>
+<button class="btn" id="sub">Send request</button>
 <p class="mu">Your email is used only to notify you when new notes are ready.</p>`;
  $("sub").onclick=()=>send();gsi()}
 function gsi(){if(!CFG.gid)return;const run=()=>{google.accounts.id.initialize({client_id:CFG.gid,callback:r=>{S.tok=r.credential;try{const p=JSON.parse(decodeURIComponent(escape(atob(r.credential.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")))));$("em").value=p.email;$("em").readOnly=true;if(!$("nm").value)$("nm").value=p.name||""}catch(e){}}});google.accounts.id.renderButton($("gb"),{theme:"outline",size:"large",text:"continue_with",width:280})};
@@ -117,7 +117,7 @@ async function send(skip){const nm=$("nm").value.trim(),kw=$("kw").value.trim();
  let vr=[];try{vr=JSON.parse(localStorage.getItem("vr")||"[]").filter(t=>Date.now()-t<864e5)}catch(e){}
  if(vr.length>=3)return modal(...E.limit);
  $("sub").disabled=true;$("sub").textContent="Sending...";
- try{const r=await(await fetch(CFG.api,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({name:nm,email:em,idToken:S.tok||"",keyword:kw,paperId:S.p.id,hp:$("hp").value})})).json();
+ try{const r=await(await fetch(CFG.api,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({name:nm,email:em,idToken:S.tok||"",keyword:kw,paperId:S.p.id})})).json();
   if(r.ok){try{localStorage.setItem("vr",JSON.stringify([...vr,Date.now()]))}catch(e){}return done(r)}
   $("sub").disabled=false;$("sub").textContent="Send request";{const m=E[r.err]||E.server;modal(m[0],m[1]+(r.why?"<br><small>Details: "+esc(r.why)+"</small>":""))}}
  catch(e){$("sub").disabled=false;$("sub").textContent="Send request";modal("Network error","Please check your internet and try again.")}}
