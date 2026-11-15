@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VAID – Notes Request</title><meta name="theme-color" content="#3a1f0a">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VAID – Notes Request</title><meta name="theme-color" content="#3a1f0a">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f4efe6;--card:#fff;--ink:#2b1b0e;--mute:#7a6a58;--line:#e6dccb;--gold:#e8a920;--amber:#b86e00;--brown:#3a1f0a;--soft:#f1e8d8}
@@ -22,7 +22,6 @@ h2{font:700 25px/1.25 'Playfair Display',serif;color:var(--brown);margin:6px 0 1
 .opt{display:flex;width:100%;justify-content:space-between;align-items:center;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 9px;font:inherit;color:inherit;cursor:pointer;min-height:52px}
 .opt:active{transform:scale(.98);background:var(--soft)}.opt small{display:block;color:var(--mute);font-size:12.5px}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.grid .opt{justify-content:center;margin:0;font-weight:600;padding:14px 0}
-.opt.done{background:var(--soft);color:var(--mute)}
 .btn{background:var(--brown);color:#fff8e8;border:0;border-radius:24px;padding:13px 26px;font:600 15px Inter,sans-serif;cursor:pointer;min-height:48px}
 .btn.alt{background:transparent;color:var(--brown);border:1px solid var(--line)}.btn:disabled{opacity:.6}
 .link{background:none;border:0;color:var(--amber);font:inherit;text-decoration:underline;cursor:pointer;padding:8px 0}
@@ -37,103 +36,96 @@ input:focus,.btn:focus-visible,.opt:focus-visible{outline:2px solid var(--amber)
 </style></head><body>
 <div id="splash">
 <svg class="ck" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40"/><path d="M30 50l13 13 23-27"/></svg>
-<h1>Congrats! 🎉</h1><p>Tumne Unit-1 padh liya. Agla unit bas ek request door hai.</p><p class="s">Just give your 30 seconds.</p>
-<button class="btn" id="go" style="background:var(--gold);color:var(--brown)">Shuru karo</button>
+<h1>Congrats! 🎉</h1><p>You're one step away from your notes.</p><p class="s">Just give us 30 seconds.</p>
+<button class="btn" id="go" style="background:var(--gold);color:var(--brown)">Get started</button>
 </div>
 <main>
 <header><b>VAID</b><span class="mu">Notes request</span></header>
 <div class="bar"><i id="pb"></i></div><div id="cr"></div>
 <h2 id="q">Loading...</h2><div id="o"></div>
-<button class="link" id="bk" hidden>← Wapas</button>
-<p class="mu" style="margin-top:22px"><button class="link" id="st">Request ID se status dekho</button> · <a class="link" href="https://wa.me/917979016680" target="_blank" rel="noopener">Madad chahiye? WhatsApp</a></p>
+<button class="link" id="bk" hidden>← Back</button>
+<p class="mu" style="margin-top:22px"><button class="link" id="st">Check request status</button> · <a class="link" href="https://wa.me/917979016680" target="_blank" rel="noopener">Need help? WhatsApp</a></p>
 </main><div id="md"></div>
 <script>
-/* ===== SETTINGS: edit these 3 lines ===== */
+/* ===== SETTINGS: edit this line only ===== */
 const CFG={api:"https://script.google.com/macros/s/AKfycbzI8cs56x4eVA_0KVn-c-gFtQa4Jd9rGqx5mgMAjePp15KSCkGCqGBbhSlYsRjnV_ZSdw/exec",gid:"",vaid:"https://studyspace011.github.io/vaid/"};
-/* gid = Google OAuth Client ID (optional, enables one-tap email). vaid = your notes site (data/*.json) */
+/* api = your Apps Script Web App URL. gid = Google OAuth Client ID (optional, one-tap email). vaid = your notes site (data/*.json) */
 
 const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const NAMES={ba:"B.A.",bsc:"B.Sc.",bcom:"B.Com."};
-const TYPES={MJC:["Major (MJC)","Tumhara main subject"],MIC:["Minor (MIC)","Tumhara secondary subject"],MDC:["MDC","Multidisciplinary course"],OTH:["Other","AEC, SEC, VAC"]};
-const STEPS=["sem","st","ty","dept","p","u","f"];
-const E={keyword:["Keyword match nahi hua","Unit-1 ke end me diya gaya word hi likho. Notes ek baar dhyan se padh lo."],dup:["Request pehle se registered hai","Is unit ki request tumhari aa chuki hai. Mail ka intezaar karo."],avail:["Ye unit already available hai","Is unit ke notes ready hain. VAID par dobara check karo."],limit:["Aaj ka limit poora","Ek din me kuch hi requests ho sakti hain. Kal dobara aao."],email:["Email sahi nahi mila","Email check karke dobara try karo."],name:["Naam likho","Apna poora naam daalo."],busy:["Server busy hai","Thodi der baad try karo."],server:["Kuch gadbad hui","Dobara try karo. Na chale to WhatsApp par batao."]};
+const TYPES={MJC:["Major (MJC)","Your main subject"],MIC:["Minor (MIC)","Your secondary subject"],MDC:["MDC","Multidisciplinary course"],OTH:["Other","AEC, SEC, VAC"]};
+const STEPS=["sem","st","ty","dept","p","f"];
+const E={keyword:["Keyword doesn't match","Enter the exact keyword given at the end of the notes. Read the notes once more and try again."],dup:["Request already registered","You already have a pending request for this paper. We'll email you when new notes are added."],avail:["Already available","All notes for this paper are already available on VAID."],limit:["Daily limit reached","Only a few requests are allowed per day. Please come back tomorrow."],email:["Email not valid","Please check your email and try again."],name:["Name required","Please enter your full name."],busy:["Server is busy","Please try again in a moment."],server:["Something went wrong","Please try again. If it keeps failing, message us on WhatsApp."]};
 let DATA={},AV={},S={},H=[];
 const tap=()=>navigator.vibrate&&navigator.vibrate(12);
 
-function modal(t,m,b){const x=b||[["Theek hai"]];$("md").innerHTML=`<div class="box"><h3>${esc(t)}</h3><p class="mu" style="margin:0 0 16px">${m}</p><div class="row">${x.map((y,i)=>`<button class="btn ${i?"alt":""}" data-i="${i}">${esc(y[0])}</button>`).join("")}</div></div>`;$("md").classList.add("on");
+function modal(t,m,b){const x=b||[["OK"]];$("md").innerHTML=`<div class="box"><h3>${esc(t)}</h3><p class="mu" style="margin:0 0 16px">${m}</p><div class="row">${x.map((y,i)=>`<button class="btn ${i?"alt":""}" data-i="${i}">${esc(y[0])}</button>`).join("")}</div></div>`;$("md").classList.add("on");
 $("md").onclick=e=>{const k=e.target.closest("[data-i]");if(e.target.id=="md"||k){$("md").classList.remove("on");if(k&&x[+k.dataset.i][1])x[+k.dataset.i][1]()}}}
 
 async function load(k){if(DATA[k])return;const r=await fetch(CFG.vaid+"data/"+k+".json",{cache:"no-cache"});if(!r.ok)throw 0;const j=await r.json();
 DATA[k]=(Array.isArray(j)?j:j.papers).map((p,i)=>({...p,id:String(p.id??k+"-"+i),sem:+p.sem,type:String(p.type||"").trim().toUpperCase(),dept:String(p.dept||"").trim()||"Common",name:String(p.name||p.title||"Untitled")}))}
-async function full(p){try{if(typeof p.notes!="string"||!p.notes)return false;const r=await fetch(new URL(p.notes.replace(/^\/+/,""),CFG.vaid).href,{method:"HEAD",cache:"no-store"});return r.ok&&!/text\/html/i.test(r.headers.get("content-type")||"")}catch(e){return false}}
 
 const types=()=>["MJC","MIC","MDC"].filter(t=>DATA[S.st].some(p=>p.sem==S.sem&&p.type==t)).concat(DATA.common.some(p=>p.sem==S.sem)?["OTH"]:[]);
 const depts=()=>[...new Set(DATA[S.st].filter(p=>p.sem==S.sem&&p.type==S.ty).map(p=>p.dept))].sort();
 const plist=()=>S.ty=="OTH"?DATA.common.filter(p=>p.sem==S.sem):DATA[S.st].filter(p=>p.sem==S.sem&&p.type==S.ty&&p.dept==S.dept);
-/* Auto-filter: a step with only one choice is skipped */
+/* Auto-filter: any step with only one choice is skipped. Choosing a paper goes straight to the request form. */
 function adv(){for(;;){
  if(!S.sem)return S.step="sem";
  if(!S.st)return S.step="st";
  if(!S.ty){const t=types();if(t.length==1){S.ty=t[0];continue}return S.step="ty"}
  if(!S.dept&&S.ty!="OTH"){const d=depts();if(d.length==1){S.dept=d[0];continue}return S.step="dept"}
  if(!S.p){const l=plist();if(l.length==1){S.p=l[0];continue}return S.step="p"}
- if(!S.u)return S.step="u";
  return S.step="f"}}
 
-async function pick(k,v){tap();
- if(k=="u"){const a=AV[S.p.id];if(a&&+v<=a.d)return modal("Ye unit already available hai","Unit "+(+v)+" ke notes ready hain. VAID par dobara check karo.",[["VAID kholo",()=>open(CFG.vaid,"_blank")],["Theek hai"]])}
- H.push({...S});
+async function pick(k,v){tap();H.push({...S});
  try{if(k=="st")await load(v)}catch(e){S=H.pop();return fail()}
  if(k=="p")v=plist().find(x=>x.id==v);
- S[k]=k=="sem"||k=="u"?+v:v;adv();draw()}
+ S[k]=k=="sem"?+v:v;adv();draw()}
 function back(){S=H.pop();draw()}
-function fail(){$("q").textContent="Data load nahi hua";$("o").innerHTML='<p class="mu">Internet check karo, phir dobara try karo.</p><button class="btn" onclick="start()">Retry</button>'}
+function fail(){$("q").textContent="Could not load data";$("o").innerHTML='<p class="mu">Check your internet connection and try again.</p><button class="btn" onclick="start()">Retry</button>'}
 
 function list(k,items){return items.map(i=>`<button class="opt" data-k="${k}" data-v="${esc(i[0])}"><span>${esc(i[1])}${i[2]?`<small>${esc(i[2])}</small>`:""}</span><span>›</span></button>`).join("")}
 function draw(){const q=$("q"),o=$("o"),i=STEPS.indexOf(S.step);
  $("pb").style.width=Math.round((i+1.6)/(STEPS.length+.6)*100)+"%";$("bk").hidden=!H.length||S.step=="done";
  $("cr").textContent=[S.sem&&"Sem "+S.sem,S.st&&NAMES[S.st],S.ty&&TYPES[S.ty][0].split(" ")[0],S.dept,S.p&&S.p.code].filter(Boolean).join(" › ");
- if(S.step=="sem"){q.textContent="Kaun sa semester?";o.innerHTML='<div class="grid">'+[1,2,3,4,5,6,7,8].map(n=>`<button class="opt" data-k="sem" data-v="${n}">${n}</button>`).join("")+"</div>"}
- else if(S.step=="st"){q.textContent="Tumhara stream?";o.innerHTML=list("st",Object.keys(NAMES).map(k=>[k,NAMES[k]]))}
- else if(S.step=="ty"){q.textContent="Ye paper tumhara kya hai?";o.innerHTML=list("ty",types().map(t=>[t,TYPES[t][0],TYPES[t][1]]))}
- else if(S.step=="dept"){q.textContent="Kaun sa subject?";o.innerHTML=list("dept",depts().map(d=>[d,d]))}
- else if(S.step=="p"){q.textContent="Kaun sa paper?";o.innerHTML=list("p",plist().map(p=>[p.id,p.code+" – "+p.name,(p.cr||"")&&p.cr+" credits"]))}
- else if(S.step=="u")units();
+ if(S.step=="sem"){q.textContent="Which semester are you in?";o.innerHTML='<div class="grid">'+[1,2,3,4,5,6,7,8].map(n=>`<button class="opt" data-k="sem" data-v="${n}">${n}</button>`).join("")+"</div>"}
+ else if(S.step=="st"){q.textContent="Which stream?";o.innerHTML=list("st",Object.keys(NAMES).map(k=>[k,NAMES[k]]))}
+ else if(S.step=="ty"){q.textContent="What type of paper is this?";o.innerHTML=list("ty",types().map(t=>[t,TYPES[t][0],TYPES[t][1]]))}
+ else if(S.step=="dept"){q.textContent="Which subject?";o.innerHTML=list("dept",depts().map(d=>[d,d]))}
+ else if(S.step=="p"){q.textContent="Which paper?";o.innerHTML=list("p",plist().map(p=>[p.id,p.code+" – "+p.name,(p.cr||"")&&p.cr+" credits"]))}
  else if(S.step=="f")form();
  scrollTo(0,0)}
 
-function units(){const q=$("q"),o=$("o"),a=AV[S.p.id];q.textContent=S.p.name;
- if(!a){o.innerHTML='<div class="card"><b>Coming soon</b><p class="mu">Is paper ke notes abhi ban rahe hain. Jaldi aayenge, thodi der baad dekho.</p></div>';return}
- o.innerHTML='<p class="mu">Kaun sa unit chahiye? Tick wale unit pehle se available hain.</p><div class="grid">'+Array.from({length:a.t},(_,n)=>`<button class="opt ${n<a.d?"done":""}" data-k="u" data-v="${n+1}">${n<a.d?"✓ ":""}${n+1}</button>`).join("")+"</div>";
- full(S.p).then(l=>{if(l&&S.step=="u")modal("Poore notes already available hain","<b>"+esc(S.p.name)+"</b> ke notes VAID par pehle se hain. Pehle wahan check karo.",[["VAID par dekho",()=>open(CFG.vaid,"_blank")],["Wapas jao",back]])})}
-
-function form(){$("q").textContent="Bas ab aakhri step";
- $("o").innerHTML=`<p class="mu">${esc(S.p.name)}, Unit ${S.u}</p>
-<label>Tumhara naam<input id="nm" autocomplete="name" maxlength="60"></label>
-<label>Unit-1 ke end me diya gaya keyword<input id="kw" autocomplete="off"></label>
+function form(){const a=AV[S.p.id];$("q").textContent=S.p.name;
+ if(!a){$("o").innerHTML='<div class="card"><b>Coming soon</b><p class="mu">Notes for this paper are still being prepared. Please check back later.</p></div>';return}
+ if(a.d>=a.t){$("o").innerHTML='<div class="card"><b>Already available</b><p class="mu">All notes for this paper are already on VAID.</p><button class="btn" onclick="open(CFG.vaid,\'_blank\')">Open VAID</button></div>';
+  modal("Already available","All notes for <b>"+esc(S.p.name)+"</b> are already on VAID. Please check there first.",[["Open VAID",()=>open(CFG.vaid,"_blank")],["Go back",back]]);return}
+ $("o").innerHTML=`<p class="mu">Request the remaining notes for this paper.</p>
+<label>Your name<input id="nm" autocomplete="name" maxlength="60"></label>
+<label>Keyword from the end of the notes<input id="kw" autocomplete="off"></label>
 <label>Email<input id="em" type="email" autocomplete="email" placeholder="name@gmail.com"></label><div id="gb" style="margin:0 0 12px"></div>
-<input id="hp" class="hp" tabindex="-1" autocomplete="off"><button class="btn" id="sub">Request bhejo</button>
-<p class="mu">Tumhara email sirf notes ready hone par mail bhejne ke liye use hoga.</p>`;
+<input id="hp" class="hp" tabindex="-1" autocomplete="off"><button class="btn" id="sub">Send request</button>
+<p class="mu">Your email is used only to notify you when new notes are ready.</p>`;
  $("sub").onclick=()=>send();gsi()}
 function gsi(){if(!CFG.gid)return;const run=()=>{google.accounts.id.initialize({client_id:CFG.gid,callback:r=>{S.tok=r.credential;try{const p=JSON.parse(decodeURIComponent(escape(atob(r.credential.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")))));$("em").value=p.email;$("em").readOnly=true;if(!$("nm").value)$("nm").value=p.name||""}catch(e){}}});google.accounts.id.renderButton($("gb"),{theme:"outline",size:"large",text:"continue_with",width:280})};
  if(window.google&&google.accounts)run();else{const s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.onload=run;document.head.appendChild(s)}}
 
 async function send(skip){const nm=$("nm").value.trim(),kw=$("kw").value.trim();let em=$("em").value.trim().toLowerCase();
- if(nm.length<2||!kw||(!S.tok&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)))return modal("Form adhura hai","Naam, keyword aur sahi email teeno bharo.");
+ if(nm.length<2||!kw||(!S.tok&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)))return modal("Form incomplete","Please fill in your name, the keyword and a valid email.");
  const fx=em.replace(/@(gmial|gmai|gamil|gnail)\.com$/,"@gmail.com").replace(/@gmail\.(con|cm|co)$/,"@gmail.com");
- if(!S.tok&&fx!=em&&!skip)return modal("Email check karo","Kya tumhara email <b>"+esc(fx)+"</b> hai?",[["Haan, ye sahi hai",()=>{$("em").value=fx;send(1)}],["Nahi, main badlunga"]]);
+ if(!S.tok&&fx!=em&&!skip)return modal("Check your email","Is your email <b>"+esc(fx)+"</b>?",[["Yes, that's correct",()=>{$("em").value=fx;send(1)}],["No, I'll fix it"]]);
  let vr=[];try{vr=JSON.parse(localStorage.getItem("vr")||"[]").filter(t=>Date.now()-t<864e5)}catch(e){}
  if(vr.length>=3)return modal(...E.limit);
- $("sub").disabled=true;$("sub").textContent="Bhej rahe hain...";
- try{const r=await(await fetch(CFG.api,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({name:nm,email:em,idToken:S.tok||"",keyword:kw,paperId:S.p.id,unit:S.u,hp:$("hp").value})})).json();
+ $("sub").disabled=true;$("sub").textContent="Sending...";
+ try{const r=await(await fetch(CFG.api,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({name:nm,email:em,idToken:S.tok||"",keyword:kw,paperId:S.p.id,hp:$("hp").value})})).json();
   if(r.ok){try{localStorage.setItem("vr",JSON.stringify([...vr,Date.now()]))}catch(e){}return done(r)}
-  $("sub").disabled=false;$("sub").textContent="Request bhejo";modal(...(E[r.err]||E.server))}
- catch(e){$("sub").disabled=false;$("sub").textContent="Request bhejo";modal("Network error","Internet check karke dobara try karo.")}}
+  $("sub").disabled=false;$("sub").textContent="Send request";modal(...(E[r.err]||E.server))}
+ catch(e){$("sub").disabled=false;$("sub").textContent="Send request";modal("Network error","Please check your internet and try again.")}}
 
-function done(r){S.step="done";H=[];$("bk").hidden=true;$("pb").style.width="100%";$("q").textContent="Request mil gayi!";
- $("o").innerHTML=`<div class="card"><p class="mu" style="margin:0">Tumhari Request ID</p><div class="id">${esc(r.id)}</div><p class="mu">${r.waiting>1?r.waiting+" students is unit ke liye wait kar rahe hain. ":""}Notes ready hote hi email aayega. Is ID ko save kar lo.</p></div><p style="text-align:center"><button class="btn alt" onclick="reset()">Doosri request</button></p>`}
+function done(r){S.step="done";H=[];$("bk").hidden=true;$("pb").style.width="100%";$("q").textContent="Request received!";
+ $("o").innerHTML=`<div class="card"><p class="mu" style="margin:0">Your request ID</p><div class="id">${esc(r.id)}</div><p class="mu">${r.waiting>1?r.waiting+" students are waiting for this paper. ":""}We'll email you as soon as new notes are added. Save this ID.</p></div><p style="text-align:center"><button class="btn alt" onclick="reset()">New request</button></p>`}
 function reset(){S={};H=[];adv();draw()}
-function stat(){modal("Request status","Apni Request ID daalo.<input id='sid' placeholder='VAID-1001'>",[["Check karo",async()=>{try{const r=await(await fetch(CFG.api+"?action=status&id="+encodeURIComponent($("sid").value.trim()))).json();modal(r.ok?r.status:"Nahi mili",r.ok?esc(r.paper)+", Unit "+esc(r.unit):"Ye ID sheet me nahi mili.")}catch(e){modal("Network error","Dobara try karo.")}}],["Band karo"]])}
+function stat(){modal("Check request status","Enter your request ID.<input id='sid' placeholder='VAID-1001'>",[["Check",async()=>{try{const r=await(await fetch(CFG.api+"?action=status&id="+encodeURIComponent($("sid").value.trim()))).json();modal(r.ok?r.status:"Not found",r.ok?esc(r.paper):"This ID was not found.")}catch(e){modal("Network error","Please try again.")}}],["Close"]])}
 
 async function start(){$("q").textContent="Loading...";$("o").innerHTML="";
  try{await load("common");AV=await(await fetch(CFG.api+"?action=avail")).json();adv();draw()}catch(e){fail()}}
